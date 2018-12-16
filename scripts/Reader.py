@@ -8,8 +8,15 @@ import sys
 
 from evdev import InputDevice, categorize, ecodes, list_devices
 from select import select
+
+def get_devices():
+    return [InputDevice(fn) for fn in list_devices()]
+
 class Reader:
+    reader = None
+
 	def __init__(self):
+	    self.reader = self
 		path = os.path.dirname(os.path.realpath(__file__))
 		self.keys = "X^1234567890XXXXqwertzuiopXXXXasdfghjklXXXXXyxcvbnmXXXXXXXXXXXXXXXXXXXXXXX"
 		if not os.path.isfile(path + '/deviceName.txt'):
@@ -17,7 +24,7 @@ class Reader:
 		else: 
 			with open(path + '/deviceName.txt','r') as f:
 				deviceName = f.read()
-			devices = [InputDevice(fn) for fn in list_devices()]
+			devices = get_devices()
 			for device in devices:
 				if device.name == deviceName:
 					self.dev = device
